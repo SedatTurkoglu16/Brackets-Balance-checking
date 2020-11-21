@@ -1,0 +1,58 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+#define n 30
+
+char stack[n]; int top;  //stack dizisi ve top degiskeni global olarak tanımlandı.
+
+void push(char x) {      
+  if (top == (n - 1))    //top degeri max kapasiteye esit ise stack doludur ve push yapilamaz.
+    printf("Stack Dolu. Ekleme yapilamaz...\n");
+  else {
+    top++;  // top 1 artırılıp
+    stack[top] = x;  // stack'in yeni indisine x elemanı eklenir.
+  }
+}
+
+void pop() {            
+  if (top == -1) { 										// top degeri -1 e eşit ise stack bostur.
+    printf("Stack bos. Cikarilacak eleman yok \n");
+  } else {
+    top = top - 1; 			// top 1 azaltılır ve pop islemi yapilmis olur.
+  }
+}
+
+void ParantezKontrol(char ifade[]){   		// Parantez kontrolü için bu fonksiyona kullanıcıdan alınan ifade gönderildi.
+	int i, sayac = 0;
+	for (i = 0; i < strlen(ifade); i++) {
+    	if (ifade[i] == '(' || ifade[i] == '[' || ifade[i] == '{') {
+      		push(ifade[i]);          // Acik parantez bulunursa bunu stack içine ekle.
+			sayac++;				// push işlemi sayac ile sayılıyor. Eğer sayac artmıyorsa ifadede parantez bulunmamış demektir.
+      		continue;
+    	} else if (ifade[i] == ')' || ifade[i] == ']' || ifade[i] == '}') {       // kapanmis bir parantez cikmasi durumunda
+    		if (stack[top] == '(' || stack[top] == '[' || stack[top] == '{') {   // stack içine giren son elemanda karşılık bulunursa.
+          		pop();   // pop işlemini yap. Yani bunları stack'ten çıkart.
+        	} else {
+          		printf("\nYanlis parantez kullanimi\n"); 
+          		exit(1);
+        	}
+    	}
+   }
+   if (sayac == 0){        // sayac artmamışsa stack içine parantez atılmamış demektir. Parantez bulunamamıştır.
+   	  printf(" HATA!!! Parantezli ifade girmediniz...\n");
+   	  exit(1);
+   }
+   if (top == -1){ 									// Stack'in içi tamamen boşaltılmış ise ifade doğrudur.
+      printf("\nDogru parantez kullanimi...\n"); 
+   }else{										   // Stack'in içinde hala parantezli eleman kaldıysa ifade hatalıdır.
+      printf("\nYanlis parantez kullanimi...\n");
+  }
+}
+
+int main() {
+  char ifade[n]; top = -1;
+  printf("\nParantez iceren matematiksel ifadeyi giriniz :\n\n ");
+  scanf("%s", ifade);
+  ParantezKontrol(ifade);   
+  return 0;
+}
