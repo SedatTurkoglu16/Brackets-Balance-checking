@@ -29,21 +29,39 @@ void ParantezKontrol(char ifade[]){   		// Parantez kontrolü için bu fonksiyon
 			sayac++;				// push işlemi sayac ile sayılıyor. Eğer sayac artmıyorsa ifadede parantez bulunmamış demektir.
       			continue;
     		} else if (ifade[i] == ')' || ifade[i] == ']' || ifade[i] == '}') {       // kapanmis bir parantez cikmasi durumunda
-    			if (stack[top] == '(' || stack[top] == '[' || stack[top] == '{') {   // stack içine giren son elemanda karşılık bulunursa.
-          			pop();   // pop işlemini yap. Yani bunları stack'ten çıkart.
-        		} else {
-          			printf("\nYanlis parantez kullanimi\n"); 
-          			exit(1);
-        		}
+    			if(ifade[i] == ')'){
+				if(stack[top] == '('){		//stack içine giren son elemanla karşılık bulunursa.
+					pop();		       // pop( ) yap. stackten çıkar
+				}else{
+					printf("parantez kullanimi yanlistir...");
+					exit(1);
+				}
+			}
+			if(ifade[i] == ']'){
+				if(stack[top] == '['){      // yukarıdaki işlemi köşeli parantez için de gerçekleştirdik.
+					pop();
+				}else{
+					printf("parantez kullanimi yanlistir...");
+					exit(1);
+				}
+			}
+			if(ifade[i] == '}'){
+				if(stack[top] == '{'){	    // yukarıdaki işlemi süslü parantez için de gerçekleştirdik.
+					pop();
+				}else{
+					printf("parantez kullanimi yanlistir...");
+					exit(1);
+				}
+			}
     		}
    	}
    	if (sayac == 0){        // sayac artmamışsa stack içine parantez atılmamış demektir. Parantez bulunamamıştır.
    	    printf(" HATA!!! Parantezli ifade girmediniz...\n");
    	    exit(1);
    	}
-   	if (top == -1){ 									// Stack'in içi tamamen boşaltılmış ise ifade doğrudur.
+   	if (top == -1){ 						 // Stack'in içi tamamen boşaltılmış ise parantezler dengeli kullanılmıştır.
       	   printf("\nDogru parantez kullanimi...\n"); 
-   	}else{										   // Stack'in içinde hala parantezli eleman kaldıysa ifade hatalıdır.
+   	}else{								// Stack'in içinde hala parantezli eleman kaldıysa ifade hatalıdır.
       	   printf("\nYanlis parantez kullanimi...\n");
      }
 }
@@ -52,6 +70,6 @@ int main() {
   char ifade[n]; top = -1;
   printf("\nParantez iceren matematiksel ifadeyi giriniz :\n\n ");
   scanf("%s", ifade);
-  ParantezKontrol(ifade);   
+  ParantezKontrol(ifade);         // kullanıcıdan alınan ifade değişkeni parametre olarak ParantezKontrol() fonksiyonuna gönderiliyor.
   return 0;
 }
